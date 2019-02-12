@@ -24,4 +24,5 @@ You are recommended to use **start.sh**, **reload.sh** and **stop.sh** to start,
 1. the spec and example of the **dao** layer under the model layer.
 
 ## **License**
+
 [MIT](https://github.com/tweyseo/Shredder/blob/master/LICENSE)

@@ -7,7 +7,9 @@ local scheduler = require("scheduler.index")
 local utils = require("toolkit.utils")
 local log = require("log.index")
 
-local hello = newTable(0, 3)
+local hello = newTable(0, 4)
+
+hello.reflection = "hello"
 
 function hello.tcp(_, res)
     --res:send("hello too!")
