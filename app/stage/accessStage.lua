@@ -1,0 +1,1 @@
+ngx.ctx.reqId = ngx.var.request_id

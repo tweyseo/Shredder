@@ -12,7 +12,7 @@ return function(app)
     local requireTable = newTable(0, 16)
     local regexInfo = { regex, "path", "objectName" }
     local Tracer = wrapper.TRACER
-    local tracer = Tracer:new(Tracer.WARN, { ["hello"] = { ["tcp"] = true, ["capture"] = true } })
+    local tracer = Tracer:new(Tracer.WARN, { ["hello"] = { ["http"] = true, ["capture"] = true }})
     local autoRequire = AutoRequire:new(regexInfo, { ["index.lua"] = true }, tracer)
 
     autoRequire(requirePath, requireTable)
@@ -21,6 +21,7 @@ return function(app)
     app:get("/test/hello", requireTable.hello.tcp)
     app:get("/test/httpHello", requireTable.hello.http)
     app:get("/test/captureHello", requireTable.hello.capture)
+    app:get("/test/check", requireTable.hello.check)
 
      -- redis test
      app:get("/test/rdsSet", requireTable.redis.set)

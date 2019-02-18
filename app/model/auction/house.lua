@@ -12,6 +12,8 @@ local utils = require("toolkit.utils")
 
 local house = newTable(0, 5)
 
+house.reflection = "house"
+
 function house.getItemList()
     local key = "auction:house:itemList"
     local resps, err = scheduler(scheduler.REDIS, config,  { "hgetall", key })

@@ -71,7 +71,7 @@ function redis.get(req, res)
     -- if value is empty, redis will return ngx.null which pass to json_decode will return nil
     local info = utils.json_decode(ret)
     local serverType = req.body.serverType
-    local specificInfo = info and info[serverType] or nil
+    local specificInfo = info and info[serverType]
 
     local content = "get "..(serverType or "nil").." server info"
     local jsonSpecificInfo = utils.json_encode(specificInfo)
@@ -112,7 +112,7 @@ function redis.rcGet(req, res)
     -- if value is empty, redis will return ngx.null which pass to json_decode will return nil
     local info = utils.json_decode(resp)
     local serverType = req.body.serverType
-    local specificInfo = info and info[serverType] or nil
+    local specificInfo = info and info[serverType]
 
     local content = "get "..(serverType or "nil").." server info"
     local jsonSpecificInfo = utils.json_encode(specificInfo)

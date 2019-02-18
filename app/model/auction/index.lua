@@ -11,9 +11,12 @@ return (function()
     -- the value 16 depend on function count in model/...(except index.lua)
     local requireTable = newTable(0, 16)
     local regexInfo = { regex, "path", "objectName" }
-    local Tracer = wrapper.TRACER
+    local Tracer, Checker = wrapper.TRACER, wrapper.CHECKER
     local tracer = Tracer:new(Tracer.WARN)
-    local autoRequire = AutoRequire:new(regexInfo, { ["index.lua"] = true }, tracer)
+    local checklist =  { ["house"] = { ["shelf"] = { ["params"] = { "string", "string" } } } }
+    local except = { ["house"] = { ["shelf"] = true } }
+    local checker = Checker:new(checklist, except, true)
+    local autoRequire = AutoRequire:new(regexInfo, { ["index.lua"] = true }, tracer, checker)
 
     autoRequire(requirePath, requireTable)
 
