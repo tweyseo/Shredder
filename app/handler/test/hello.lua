@@ -68,7 +68,7 @@ end
 local wo = checker:wrap(checkTest, { source = "/handler/test/hello(checkTest)", name = "checkTest"})
 
 function hello.check(_, res)
-    wo.test("tweyseo", nil, { 13, nil, { a = 13, b = nil, c = "tweyseo" } })
+    wo.test("tweyseo", "skip", { 13, "skip", { 13, b = "skip", c = "tweyseo" } })
     --checkTest.test()
     res:send("check succ!")
 end
