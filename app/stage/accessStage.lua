@@ -1,2 +1,2 @@
 ngx.ctx.reqId = ngx.var.request_id
-ngx.ctx.contentType = ngx.var.content_type
+ngx.ctx['Content-Type'] = ngx.var.content_type

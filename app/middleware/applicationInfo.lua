@@ -1,11 +1,10 @@
 -- function reference
 -- include
+local versionCfg = require("conf.version")
 
-return function(version)
-    return function(_, res, next)
-        res:set_header('X-Powered-By', version.poweredBy)
-        res.locals.app_name = version.name
-        res.locals.app_version = version.id
+return function()
+    return function(_, resp, next)
+        resp:addHeader('X-Powered-By', versionCfg)
         next()
     end
 end

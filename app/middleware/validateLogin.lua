@@ -2,8 +2,9 @@
 local match = ngx.re.match
 local ipairs = ipairs
 -- include
+local whitePathList = require("conf.whitePathList")
 
-return function(whitePathList)
+return function()
     return function(req, _, next)
         local requestPath = req.path
         local white = false
@@ -17,7 +18,6 @@ return function(whitePathList)
         end
 
         ::goon::
-        -- use sharedict or redis to save session
         if white then
             next()
         else

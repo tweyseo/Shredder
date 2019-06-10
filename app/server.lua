@@ -1,31 +1,24 @@
 -- function reference
 -- include
-local lor = require("lor.index")
-local init = require("init")
-local versionCfg = require("conf.version")
-local appInfoMW = require("middleware.applicationInfo")
---local whitePathList = require("conf.whitePathList")
---local validateLoginMiddleware = require("middleware.validateLogin")
+local App = require("app.index")--local lor = require("lor.index")--
 local router = require("router")
 local log = require("log.index")
 
-local app = lor()
+local app = App:new()--local app = lor()--
 
-init(app)
+function app:init()
+    -- default err hander for root path
+    self:erroruse(function(err, req, resp)
+        log.warn("default error handler: ", err)
 
-app:use(appInfoMW(versionCfg))
---app:use(validateLoginMiddleware(whitePathList))
+        if req:hasFound() then
+            resp:setStatus(500):send("server error.")
+        else
+            resp:setStatus(404):send("404! sorry, not found.")
+        end
+    end)
 
-router(app)
-
-app:erroruse(function(err, req, res)
-    log.warn("default error handler: ", err)
-
-    if req:is_found() then
-        res:status(500):send("server error.")
-    else
-        res:status(404):send("404! sorry, not found.")
-    end
-end)
+    router(self)
+end
 
 return app
