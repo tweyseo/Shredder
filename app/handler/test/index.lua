@@ -12,7 +12,9 @@ return function(app)
     local requireTable = newTable(0, 16)
     local regexInfo = { regex, "path", "objectName" }
     local Tracer = wrapper.TRACER
-    local tracer = Tracer:new(Tracer.WARN, { ["hello"] = { ["http"] = true, ["capture"] = true }})
+    --local tracer = Tracer:new(Tracer.WARN, { ["hello"] = { ["http"] = true, ["capture"] = true }})
+    -- equal to：
+    local tracer = Tracer:new(Tracer.WARN, { ["hello"] = { ["tcp"] = true } }, true)
     local autoRequire = AutoRequire:new(regexInfo, { ["index.lua"] = true }, tracer)
 
     autoRequire(requirePath, requireTable)
