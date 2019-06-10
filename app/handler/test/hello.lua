@@ -12,43 +12,48 @@ local hello = newTable(0, 4)
 
 hello.reflection = "hello"
 
-function hello.tcp(_, res)
-    local resp, err = scheduler(scheduler.TCP
+function hello.tcp(_, resp)
+    local result, err = scheduler(scheduler.TCP
         , { addr = "192.25.106.105", port = 19527 }
         , { id = 1, body = { time = now() }
     })
-    if not resp then
+    if not result then
         log.warn("send err: ", err)
-        return res:send("bad")
+        return resp:send("bad")
     end
 
-    log.warn("resp: ", utils.json_encode(resp))
-    res:send("hello too!")
+    log.warn("resp: ", utils.json_encode(result))
+    resp:send("hello too!")
 end
 
-function hello.http(_, res)
-    local resp, err = scheduler(scheduler.HTTP
+function hello.http(_, resp)
+    local result, err = scheduler(scheduler.HTTP
         , "http://192.25.106.105:29527/ping"
         , { body = { time = now() } })
-    if not resp then
+    if not result then
         log.warn("send err: ", err)
-        return res:send("bad")
+        return resp:send("bad")
     end
 
-    log.add(log.WARN, "resp: ", utils.json_encode(resp))
-    res:send("hello too!")
+    log.add(log.WARN, "resp: ", utils.json_encode(result))
+    local h, _ = ngx.resp.get_headers()
+    for k, v in pairs(h) do
+        log.warn("@@@, ", k, " : ", v)
+    end
+    resp:send("hello too!")
 end
 
-function hello.capture(_, res)
-    local resp, err = scheduler(scheduler.CAPTURE, "/ping"
-        , { headers = { hello = "world" }, method = HTTP_POST, body = { time = now() } })
-    if not resp then
+function hello.capture(_, resp)
+    local result, err = scheduler(scheduler.CAPTURE, "/ping"
+        , { headers = { hello = "world" }, method = HTTP_POST
+        , body = utils.json_encode({ time = now() }) })
+    if not result or result.truncated == true then
         log.warn("send err: ", err)
-        return res:send("bad")
+        return resp:send("bad")
     end
 
-    log.warn("resp: ", utils.json_encode(resp))
-    res:send("hello too!")
+    log.warn("resp: ", utils.json_encode(result))
+    resp:send("hello too!")
 end
 
 local Checker = wrapper.CHECKER
@@ -67,10 +72,10 @@ end
 
 local wo = checker:wrap(checkTest, { source = "/handler/test/hello(checkTest)", name = "checkTest"})
 
-function hello.check(_, res)
+function hello.check(_, resp)
     wo.test("tweyseo", "skip", { 13, "skip", { 13, b = "skip", c = "tweyseo" } })
     --checkTest.test()
-    res:send("check succ!")
+    resp:send("check succ!")
 end
 
 return hello

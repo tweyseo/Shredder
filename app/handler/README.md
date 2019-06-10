@@ -14,7 +14,7 @@ In this demo of APIServer, using [**autoRuqire**](https://github.com/tweyseo/Mir
 -- test.lua
 local test = {}
 
-function test.doTest(req, res)
+function test.doTest(req, resp)
    -- do something
 end
 

@@ -10,8 +10,8 @@ This module was refer to [**openresty-china**](https://github.com/sumory/openres
 
 ```
 local middleware = function(params)
-    return function(req, res, next)
-        -- do something with req/res
+    return function(req, resp, next)
+        -- do something with req/resp
         next()
     end
 end

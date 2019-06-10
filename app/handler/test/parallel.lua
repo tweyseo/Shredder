@@ -17,7 +17,7 @@ end
 
 local parallel = newTable(0, 3)
 
-function parallel.common(_, res)
+function parallel.common(_, resp)
     local pc = flowCtrl.PARALLEL
     local tcpconf = { addr = "192.25.106.105", port = 19527 }
     local resps = pc({ func, { scheduler.TCP, tcpconf, { id = 1, body = { time = now() } } } }
@@ -33,7 +33,7 @@ function parallel.common(_, res)
         end
     else
         log.warn("tcp resp parallel failed, error: ", err)
-        res:send("parallel failed!")
+        resp:send("parallel failed!")
         return
     end
 
@@ -49,7 +49,7 @@ function parallel.common(_, res)
         end
     else
         log.warn("redis resp parallel failed, error: ", err)
-        res:send("parallel failed!")
+        resp:send("parallel failed!")
         return
     end
 
@@ -65,14 +65,14 @@ function parallel.common(_, res)
         end
     else
         log.warn("rediscluster resp parallel failed, error: ", err)
-        res:send("parallel failed!")
+        resp:send("parallel failed!")
         return
     end
 
-    res:send("parallel succ!")
+    resp:send("parallel succ!")
 end
 
-function parallel.professional(_, res)
+function parallel.professional(_, resp)
     local pp = flowCtrl.PARALLEL_PRO
     local url = "http://192.25.106.105:29527/ping"
     local resps = pp({ func, { scheduler.HTTP, url, { body = { time = now() } } } }
@@ -104,7 +104,7 @@ function parallel.professional(_, res)
         end
     else
         log.warn("tcp resp parallel failed, error: ", err)
-        res:send("parallel failed!")
+        resp:send("parallel failed!")
         return
     end
 
@@ -120,14 +120,14 @@ function parallel.professional(_, res)
         end
     else
         log.warn("redis resp parallel failed, error: ", err)
-        res:send("parallel failed!")
+        resp:send("parallel failed!")
         return
     end
 
-    res:send("parallel succ!")
+    resp:send("parallel succ!")
 end
 
-function parallel.race(_, res)
+function parallel.race(_, resp)
     local pr = flowCtrl.PARALLEL_RACE
     local resp, err = pr({ func
         , { scheduler.REDIS, rdsconfig, { "select", 1 }, { "get", 20181212 } } }
@@ -143,11 +143,11 @@ function parallel.race(_, res)
         end
     else
         log.warn("resp parallel failed, error: ", err)
-        res:send("parallel failed!")
+        resp:send("parallel failed!")
         return
     end
 
-    res:send("parallel succ!")
+    resp:send("parallel succ!")
 end
 
 return parallel
