@@ -20,11 +20,11 @@ local parallel = newTable(0, 3)
 function parallel.common(_, resp)
     local pc = flowCtrl.PARALLEL
     local tcpconf = { addr = "192.25.106.105", port = 19527 }
-    local resps = pc({ func, { scheduler.TCP, tcpconf, { id = 1, body = { time = now() } } } }
+    local results = pc({ func, { scheduler.TCP, tcpconf, { id = 1, body = { time = now() } } } }
         , { func, { scheduler.REDIS, rdsconfig, { "select", 1 }, { "get", 20181212 } } }
         , { func, { scheduler.REDISCLUSTER, rcconfig, { "get", 20181212 } } })
     -- tcp
-    local result, err = unpack(resps[1])
+    local result, err = unpack(results[1])
     if result then
         if result[1] then
             log.warn("tcp resp: ", utils.json_encode(result[1]))
@@ -38,7 +38,7 @@ function parallel.common(_, resp)
     end
 
     -- redis
-    result, err = unpack(resps[2])
+    result, err = unpack(results[2])
     if result then
         local ret
         ret, err = unpack(result)
@@ -54,12 +54,12 @@ function parallel.common(_, resp)
     end
 
     -- rediscluster
-    result, err = unpack(resps[3])
+    result, err = unpack(results[3])
     if result then
         local ret
         ret, err = unpack(result)
         if ret then
-            log.warn("rediscluster resp: ", ret[1])
+            log.warn("rediscluster resp: ", ret)
         else
             log.warn("rediscluster resp failed, error: ", err)
         end
@@ -75,7 +75,7 @@ end
 function parallel.professional(_, resp)
     local pp = flowCtrl.PARALLEL_PRO
     local url = "http://192.25.106.105:29527/ping"
-    local resps = pp({ func, { scheduler.HTTP, url, { body = { time = now() } } } }
+    local results = pp({ func, { scheduler.HTTP, url, { body = { time = now() } } } }
         , { func, { scheduler.REDIS, rdsconfig, { "select", 1 }, { "get", 20181212 } } }
         , { func, { scheduler.REDISCLUSTER, rcconfig, { "get", 20181212 } }, true
             , function(result, err)
@@ -83,7 +83,7 @@ function parallel.professional(_, resp)
                     local ret
                     ret, err = unpack(result)
                     if ret then
-                        log.warn("[cb] rediscluster resp: ", ret[1])
+                        log.warn("[cb] rediscluster resp: ", ret)
                     else
                         log.warn("[cb] rediscluster resp failed, error: ", err)
                     end
@@ -92,10 +92,10 @@ function parallel.professional(_, resp)
                 end
             end }
         , { func, { scheduler.CAPTURE, "/ping"
-            , { headers = { hello = "world" }, method = HTTP_POST, body = { time = now() } }, true }
+            , { method = HTTP_POST, body = utils.json_encode({ time = now() }) } } , true
         })
     -- http
-    local result, err = unpack(resps[1])
+    local result, err = unpack(results[1])
     if result then
         if result[1] then
             log.warn("tcp resp: ", utils.json_encode(result[1]))
@@ -109,7 +109,7 @@ function parallel.professional(_, resp)
     end
 
     -- redis
-    result, err = unpack(resps[2])
+    result, err = unpack(results[2])
     if result then
         local ret
         ret, err = unpack(result)
@@ -129,13 +129,13 @@ end
 
 function parallel.race(_, resp)
     local pr = flowCtrl.PARALLEL_RACE
-    local resp, err = pr({ func
+    local result, err = pr({ func
         , { scheduler.REDIS, rdsconfig, { "select", 1 }, { "get", 20181212 } } }
         , { func, { scheduler.REDISCLUSTER, rcconfig, { "get", 20181212 } } })
     -- redis or rediscluster(actually, it's redis)
-    if resp then
+    if result then
         local ret
-        ret, err = unpack(resp)
+        ret, err = unpack(result)
         if ret then
             log.warn("redis resp: ", ret[2])
         else

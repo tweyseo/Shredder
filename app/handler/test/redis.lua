@@ -43,7 +43,7 @@ function redis.set(_, resp)
         if result == false then
             log.add(log.WARN, "command [", i, "] err: ", err)
         else
-            log.add(log.WARN, "command [", i, "] resp: ", resp)
+            log.add(log.WARN, "command [", i, "] result: ", result)
         end
     end
 
@@ -93,7 +93,7 @@ function redis.rcSet(_, resp)
         if result == false then
             log.add(log.WARN, "command [", i, "] err: ", err)
         else
-            log.add(log.WARN, "command [", i, "] resp: ", resp)
+            log.add(log.WARN, "command [", i, "] result: ", result)
         end
     end
 
