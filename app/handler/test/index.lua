@@ -18,6 +18,7 @@ return function(app)
     local autoRequire = AutoRequire:new(regexInfo, { ["index.lua"] = true }, tracer)
 
     autoRequire(requirePath, requireTable)
+    app:erroruse("/test", requireTable.errHandler.handle)
 
     -- hello test
     app:get("/test/hello", requireTable.hello.tcp)
@@ -35,6 +36,4 @@ return function(app)
     app:get("/test/parallel", requireTable.parallel.common)
     app:get("/test/parallelPro", requireTable.parallel.professional)
     app:get("/test/parallelRace", requireTable.parallel.race)
-
-    app:erroruse("/test", requireTable.errHandler.handle)
 end

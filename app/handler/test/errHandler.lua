@@ -5,7 +5,7 @@ local log = require("log.index")
 
 local errHandler = newTable(0, 1)
 
-function errHandler.handle(err, next)
+function errHandler.handle(err, _, _, next)
     log.warn("test/ error handler: ", err)
     next(err)
 end

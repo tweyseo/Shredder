@@ -17,6 +17,8 @@ return function(app)
 
     autoRequire(requirePath, requireTable)
 
+    app:erroruse("/test", requireTable.errHandler.handle)
+
     app:post("/auction/account/login", requireTable.account.login)
     app:post("/auction/account/logout", requireTable.account.logout)
     app:get("/auction/house/getItemList", requireTable.house.getItemList)
@@ -25,6 +27,4 @@ return function(app)
     app:post("/auction/house/setItemInfo", requireTable.house.setItemInfo)
     app:post("/auction/house/getItemInfo", requireTable.house.getItemInfo)
     -- todo: more auction functions are waiting for you
-
-    app:erroruse("/test", requireTable.errHandler.handle)
 end

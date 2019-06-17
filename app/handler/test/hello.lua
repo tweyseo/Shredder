@@ -36,10 +36,6 @@ function hello.http(_, resp)
     end
 
     log.add(log.WARN, "resp: ", utils.json_encode(result))
-    local h, _ = ngx.resp.get_headers()
-    for k, v in pairs(h) do
-        log.warn("@@@, ", k, " : ", v)
-    end
     resp:send("hello too!")
 end
 
