@@ -1,10 +1,12 @@
 -- function reference
 -- include
-local versionCfg = require("conf.version")
+local serverInfo = require("conf.serverInfo")
+-- const
+local versionIdx = 2
 
 return function()
     return function(_, resp, next)
-        resp:addHeader('X-Powered-By', versionCfg)
+        resp:addHeader('X-Powered-By', serverInfo[versionIdx])
         next()
     end
 end
